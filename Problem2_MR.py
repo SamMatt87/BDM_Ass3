@@ -1,7 +1,6 @@
 from mrjob.job import MRJob
 from mrjob.step import MRStep
 import os
-import numpy as np
 
 class Users(MRJob):
 	def mapper(self, _, row):
@@ -66,7 +65,7 @@ class Users(MRJob):
 		post_list = []
 		for v in values:
 			post_list.append(v)
-		yield '*',(key,len(np.unique(post_list)))
+		yield '*',(key,len(set(post_list)))
 	def reducer4(self,key,values):
 		sorted_list=sorted(list(values), key=lambda x:(-x[1],x[0]))
 		for v in sorted_list[:5]:
