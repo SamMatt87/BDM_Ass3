@@ -1,4 +1,4 @@
-
+#!/usr/bin/env bash
 from mrjob.job import MRJob
 from mrjob.step import MRStep
 typeid=1
