@@ -1,6 +1,5 @@
 from pyspark import SparkContext
 import sys
-
 class Users():
 	def run(self, dataset,output):
 		if dataset[-1] != '/':
@@ -38,9 +37,6 @@ class Users():
 		counts=distinct_total.map(lambda user: (user[0],1)).reduceByKey(lambda a, b: a+b)
 		sort=sc.parallelize(counts.sortBy(lambda x:(-x[1],x[0])).take(5))
 		sort.saveAsTextFile(output)
-
-		
-
 if __name__=="__main__":
 	users=Users()
 	users.run(sys.argv[-2],sys.argv[-1])

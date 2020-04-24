@@ -1,7 +1,6 @@
 from mrjob.job import MRJob
 from mrjob.step import MRStep
 import os
-
 class Users(MRJob):
 	def mapper(self, _, row):
 		items = row.strip().split(',')	
@@ -17,8 +16,7 @@ class Users(MRJob):
 				top_post = 'toppost:'+items[0]
 				subpost='subpost:'+items[0]
 				yield ID,post
-				yield subpost,top_post
-				
+				yield subpost,top_post			
 			elif items[1]=='2':
 				ID='user:'+items[7]
 				post='post:'+items[16]
@@ -35,7 +33,6 @@ class Users(MRJob):
 			ID='user:'+items[5]
 			subpost='subpost:'+items[1]
 			yield subpost, ID
- 
 	def reducer(self,key,values):
 		user_ids=[]
 		for v in values:
@@ -48,8 +45,6 @@ class Users(MRJob):
 				yield key,v
 		for user in user_ids:
 			yield user,post
-
-			
 	def reducer2(self,key,values):
 		posts=[]
 		for v in values:
@@ -60,7 +55,6 @@ class Users(MRJob):
 				posts.append(items[1])
 		for post in posts:
 			yield username, post
-
 	def reducer3(self,key,values):
 		post_list = []
 		for v in values:
