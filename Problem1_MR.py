@@ -9,12 +9,20 @@ tag=12
 class MRUsers(MRJob):
 	def mapper(self, _, row):
 		post=row.split(',')
+		letters='''QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasddfghjklzxcvbnm '''
+		def strip_punc(text):
+			string=""
+			for char in text:
+				if char in letters:
+					string=string+char
+			return string
+
 		if post[typeid] =='1':
-			if 'big data' in post[question].lower():
+			if ' big data ' in strip_punc(post[question]).lower():
 				yield post[user],1
-			elif 'big data' in post[title].lower():
+			elif ' big data ' in strip_punc(post[title]).lower():
 				yield post[user],1
-			elif 'big data' in post[tag].lower():
+			elif ' big data ' in strip_punc(post[tag]).lower():
 				yield post[user],1
 	def reducer(self, key,values):
 		yield '*',(key,sum(values))

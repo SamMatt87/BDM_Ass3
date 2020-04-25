@@ -53,23 +53,34 @@ class Users(MRJob):
 				username = items[1]
 			else:
 				posts.append(items[1])
-		for post in posts:
-			yield username, post
-	def reducer3(self,key,values):
-		post_list = []
-		for v in values:
-			post_list.append(v)
-		yield '*',(key,len(set(post_list)))
-	def reducer4(self,key,values):
+		for k in key:
+			yield '*',(username, len(set(posts)))
+	def combiner(self,key,values):
 		sorted_list=sorted(list(values), key=lambda x:(-x[1],x[0]))
-		for v in sorted_list[:5]:
+		distinct=[]
+		i=0
+		while len(distinct) <5 and i<len(sorted_list):
+			if sorted_list[i] not in distinct:
+				distinct.append(sorted_list[i])
+			i+=1
+		for v in distinct:
+			yield '*',(v[0],v[1])
+	def reducer3(self,key,values):
+		sorted_list=sorted(list(values), key=lambda x:(-x[1],x[0]))
+		distinct=[]
+		i=0
+		while len(distinct) <5:
+			if sorted_list[i] not in distinct:
+				distinct.append(sorted_list[i])
+			i+=1
+		for v in distinct:
 			yield v[0],v[1]
 	def steps(self):
 		return[
 			MRStep(mapper=self.mapper,
 				reducer=self.reducer),
 			MRStep(reducer=self.reducer2),
-			MRStep(reducer=self.reducer3),
-			MRStep(reducer=self.reducer4)]
+			MRStep(combiner=self.combiner), 
+			MRStep(reducer=self.reducer3)]
 if __name__== '__main__':
 	Users.run()

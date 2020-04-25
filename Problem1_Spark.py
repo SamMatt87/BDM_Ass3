@@ -7,14 +7,21 @@ class Users():
 		user = 7
 		title=11
 		tag=12
+		letters='''QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasddfghjklzxcvbnm '''
+		def strip_punc(text):
+			string=""
+			for char in text:
+				if char in letters:
+					string=string+char
+			return string
 		def find_big_data(text):
 			post=text.split(',')
 			if post[typeid]=='1':
-				if 'big data' in post[question].lower():
+				if ' big data ' in strip_punc(post[question]).lower():
 					return True
-				elif 'big data' in post[title].lower():
+				elif ' big data ' in strip_punc(post[title]).lower():
 					return True
-				elif 'big data' in post[tag].lower():
+				elif ' big data ' in strip_punc(post[tag]).lower():
 					return True
 			return False
 		sc = SparkContext('local', 'post_count')
